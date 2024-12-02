@@ -9,6 +9,8 @@
 #include "Constants.h"
 #include "afxwin.h"
 
+#include "RegAccessor.h"  // no.5
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -142,6 +144,16 @@ BOOL Ule4JisDlg::OnInitDialog()
 	// save current strategy type
 	this->currentStrategy = USonJIS;
 
+	// no.5
+	// レジストリから前回設定値を復元
+	int val;
+	RegAccessor obj("SOFTWARE\\Ule4JisSilent");
+	if (obj.Read(val))
+		this->PostMessage(WM_COMMAND, val);
+
+	// 起動時隠す
+	this->PostMessage(WM_COMMAND, IDC_HIDE);
+
 	return TRUE;  // フォーカスをコントロールに設定した場合を除き、TRUE を返します。
 }
 
@@ -247,12 +259,22 @@ LRESULT Ule4JisDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	return CDialog::WindowProc(message, wParam, lParam);
 }
 
-void Ule4JisDlg::changeTaskTrayIconToUS() {
+void Ule4JisDlg::changeTaskTrayIconToUS()
+{
+	// no.5
+	RegAccessor obj("SOFTWARE\\Ule4JisSilent");
+	obj.Write(ID_TASKTRAY_START);
+
 	this->notifyIconData.hIcon = ::AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	::Shell_NotifyIcon(NIM_MODIFY, &this->notifyIconData);
 }
 
-void Ule4JisDlg::changeTaskTrayIconToJIS() {
+void Ule4JisDlg::changeTaskTrayIconToJIS()
+{
+	// no.5
+	RegAccessor obj("SOFTWARE\\Ule4JisSilent");
+	obj.Write(ID_TASKTRAY_STOP);
+
 	this->notifyIconData.hIcon = ::AfxGetApp()->LoadIcon(IDR_ICON_JIS);
 	::Shell_NotifyIcon(NIM_MODIFY, &this->notifyIconData);
 }
