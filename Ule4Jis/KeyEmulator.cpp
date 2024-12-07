@@ -14,6 +14,10 @@ void KeyEmulator::changeEmulationStrategy(EmulationStrategy *strategy) {
 }
 
 void KeyEmulator::start() {
+	// no.5
+	if (this->hooker.get())
+		this->end();
+
 	ASSERT(this->hooker.get() == NULL);
 	this->hooker.reset(new KeyHooker(this));
 }
