@@ -221,6 +221,12 @@ LRESULT Ule4JisDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	case MSG_TASKTRAY_CALLBACK:
 		// dispatch tasktray callback message
 		switch (lParam) {
+		case WM_RBUTTONDOWN:  // no.5
+			// ポップアップメニューを開く前にメインウィンドウをアクティブにする
+			// これを省略すると他のウィンドウにフォーカスが移ってもポップアップメニューが
+			// 消えなくなる
+			SetForegroundWindow();
+			break;
 		case WM_RBUTTONUP:
 			// show popup menu
 			showTaskTrayPopupMenu();
